@@ -1267,21 +1267,38 @@ public:
 
     }
 
+    class comp {
+    public:
+        bool operator()(auto &&a, auto &&b) {
+            return a.second > b.second;
+        }
+    };
+
     std::string printSortedRules() {
 
         std::vector<std::pair<std::pair<int, int>, int>> tmp;
 
         for ( auto& rule : rules ) {
             std::pair<std::pair<int, int>, int> p {{rule.first.first, rule.first.second}, rule.second};
-            tmp.push_back ( p );
+                tmp.push_back ( p );
+                
         }
 
-        std::sort (
+        std::vector<std::pair<std::pair<int, int>, int>>::iterator iter;
+        for(iter = tmp.begin(); iter != tmp.end();)
+            if ((*iter).second < 100)
+             iter = tmp.erase(iter);
+             else 
+             iter++;        
+
+       /* std::sort (
             std::begin ( tmp ), std::end ( tmp ),
         [=] ( auto&& t1, auto&&t2 ) {
             return t1.second > t2.second;
         }
-        );
+        );*/
+
+        std::sort(tmp.begin(), tmp.end(), comp());
 
         std::stringstream ss;
 
